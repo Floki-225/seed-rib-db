@@ -26,8 +26,23 @@ type Company struct {
 	TinNumber                 string    `json:"tinNumber"`
 }
 
-const apiUrl = "https://gims-broker-backend-main.onrender.com/api/v1/customers/active/companies"
-const bearerToken = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMTliYjAxNy1mNzkxLTc5NjItODkwOS05Mjg4YjFmODQ5ZWMiLCJleHAiOjE3Njg0MzA4MjMsImlhdCI6MTc2ODQyMDAyMywidXNlcklkIjoiMDE5YmIwMTctZjc5MS03OTYyLTg5MDktOTI4OGIxZjg0OWVjIiwiZW1haWwiOiJuaWlAbWFpbC5jb20iLCJmaXJzdE5hbWUiOiJOaWkiLCJsYXN0TmFtZSI6Ik5paSIsImxhc3RMb2dnZWRJbkF0IjoiMjAyNi0wMS0xMlQwOTozMDozNi41NDc1MDMwNzZaIn0.OxoJNYlcXig49lJ8b0jI_BEpsxqa6AR0f0u7-RHfclc"
+type Individual struct {
+	AltPhoneNumber        string    `json:"altPhoneNumber"`
+	CustomerType          string    `json:"customerType"`
+	DateOfBirth           time.Time `json:"dateOfBirth"`
+	Email                 string    `json:"email"`
+	FirstName             string    `json:"firstName"`
+	GhanaCard             string    `json:"ghanaCard"`
+	InstitutionID         string    `json:"institutionId"`
+	Introducer            string    `json:"introducer"`
+	LastName              string    `json:"lastName"`
+	Location              string    `json:"location"`
+	PhoneNumber           string    `json:"phoneNumber"`
+	RelationshipOfficerID string    `json:"relationshipOfficerId"`
+}
+
+const apiUrl = "https://gims-broker-backend-main.onrender.com/api/v1/customers/active/individuals"
+const bearerToken = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMTliYjAxNy1mNzkxLTc5NjItODkwOS05Mjg4YjFmODQ5ZWMiLCJleHAiOjE3Njg0Nzk2NTIsImlhdCI6MTc2ODQ2ODg1MiwidXNlcklkIjoiMDE5YmIwMTctZjc5MS03OTYyLTg5MDktOTI4OGIxZjg0OWVjIiwiZW1haWwiOiJuaWlAbWFpbC5jb20iLCJmaXJzdE5hbWUiOiJOaWkiLCJsYXN0TmFtZSI6Ik5paSIsImxhc3RMb2dnZWRJbkF0IjoiMjAyNi0wMS0xMlQwOTozMDozNi41NDc1MDMwNzZaIn0.q4UBXOkYtgtRv737vFse9eyyl2E97zSMRghHqpKqgiA"
 
 func main() {
 
@@ -43,17 +58,17 @@ func main() {
 
 	// defer closing the file to prevent memory leaks
 
-	var companies []Company
+	var individuals []Individual
 
 	// create a JSON decoder for the file
-	if err != json.Unmarshal(file, &companies) {
+	if err != json.Unmarshal(file, &individuals) {
 		log.Fatalf("error when unmarshaling json: %v", err)
 	}
 
 	// iterate to submit
-	for index, company := range companies {
+	for index, individual := range individuals {
 
-		data, err := json.Marshal(company)
+		data, err := json.Marshal(individual)
 		if err != nil {
 			log.Fatalf("error marshaling json data: %v", err)
 		}
@@ -70,7 +85,7 @@ func main() {
 		defer response.Body.Close()
 
 		if response.StatusCode == http.StatusOK || response.StatusCode == http.StatusAccepted {
-			fmt.Printf("Success: Created %d: %s\n", index+1, company.CompanyName)
+			fmt.Printf("Success: Created %d: %s\n", index+1, individual.Email)
 		} else {
 			fmt.Printf("Failed: %d. Status = %d\n", index+1, response.StatusCode)
 		}
